@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Grand Elara Convention Centre</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          cormorant: ['"Cormorant Garamond"', 'serif'],
+          jost: ['Jost', 'sans-serif'],
+        },
+        colors: {
+          gold: '#B8960C',
+          'gold-light': '#D4AF37',
+          'gold-dark': '#8B6914',
+          cream: '#FAF7F0',
+          'cream-2': '#F2EBD9',
+          'cream-3': '#E8DCC8',
+          ink: '#1A1209',
+          'ink-2': '#2A1A0A',
+          muted: '#7A6A5A',
+        },
+      },
+    },
+  }
+</script>
+
+<style>
+  /* ─── BASE ─────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; background: #FAF7F0; color: #1A1209; overflow-x: hidden; cursor: none; }
+
+  /* ─── SCROLLBAR ─────────────────────────────── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #F2EBD9; }
+  ::-webkit-scrollbar-thumb { background: #8B6914; border-radius: 2px; }
+
+  /* ─── CURSOR ────────────────────────────────── */
+  #cursor-dot  { width: 7px; height: 7px; background: #B8960C; border-radius: 50%; position: fixed; pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
+  #cursor-ring { width: 34px; height: 34px; border: 1.5px solid #B8960C; border-radius: 50%; position: fixed; pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); opacity: .55; transition: opacity .3s; }
+  a:hover ~ #cursor-ring, button:hover ~ #cursor-ring { width: 52px; height: 52px; }
+
+  /* ─── GOLD VARS ─────────────────────────────── */
+  :root {
+    --gold: #B8960C;
+    --gold-light: #D4AF37;
+    --gold-dark: #8B6914;
+    --gold-muted: rgba(184,150,12,0.16);
+    --cream: #FAF7F0;
+    --ink: #1A1209;
+  }
+
+  /* ─── ANIMATIONS ────────────────────────────── */
+  @keyframes fadeUp    { from { opacity:0; transform:translateY(36px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeLeft  { from { opacity:0; transform:translateX(-40px); } to { opacity:1; transform:translateX(0); } }
+  @keyframes fadeRight { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:translateX(0); } }
+  @keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
+  @keyframes scaleIn   { from { opacity:0; transform:scale(.92); } to { opacity:1; transform:scale(1); } }
+  @keyframes shimmer   { 0%,100% { transform:translateX(-100%); } 50% { transform:translateX(100%); } }
+  @keyframes scrollLine { 0% { height:0; opacity:0; } 50% { height:50px; opacity:1; } 100% { height:50px; opacity:0; } }
+  @keyframes beamPulse  { 0%,100% { opacity:0; stroke-dashoffset:200; } 50% { opacity:.7; stroke-dashoffset:0; } }
+  @keyframes rotateBadge { from{transform:scale(0) rotate(-20deg)} to{transform:scale(1) rotate(0deg)} }
+  @keyframes marqueeFwd  { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+  @keyframes countUp { from { opacity:0; } to { opacity:1; } }
+  @keyframes goldPulse { 0%,100%{box-shadow:0 0 0 0 rgba(184,150,12,0.3)} 50%{box-shadow:0 0 0 12px rgba(184,150,12,0)} }
+
+  /* Reveal classes */
+  .reveal         { opacity:0; transform:translateY(36px);  transition: opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1); }
+  .reveal-left    { opacity:0; transform:translateX(-44px); transition: opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1); }
+  .reveal-right   { opacity:0; transform:translateX(44px);  transition: opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1); }
+  .reveal-scale   { opacity:0; transform:scale(.93);        transition: opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1); }
+  .revealed       { opacity:1 !important; transform:none !important; }
+  .d1 { transition-delay:.1s; } .d2 { transition-delay:.2s; } .d3 { transition-delay:.3s; } .d4 { transition-delay:.4s; } .d5 { transition-delay:.5s; } .d6 { transition-delay:.6s; }
+
+  /* ─── LOADER ────────────────────────────────── */
+  #loader { position:fixed; inset:0; z-index:9999; background:#FAF7F0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; transition: opacity .8s ease, visibility .8s ease; }
+  #loader.done { opacity:0; visibility:hidden; }
+  .loader-text { font-family:'Cormorant Garamond',serif; font-size:clamp(2.2rem,5vw,3.2rem); color:var(--gold); letter-spacing:.35em; font-weight:300; }
+  .loader-sub   { font-size:.55rem; letter-spacing:.55em; text-transform:uppercase; color:#AAA; font-family:'Jost',sans-serif; }
+  .loader-bar   { width:180px; height:1px; background:#E8DCC8; position:relative; overflow:hidden; }
+  .loader-bar::after { content:''; position:absolute; left:-100%; top:0; width:100%; height:100%; background:linear-gradient(90deg,transparent,var(--gold),transparent); animation:shimmer 1.4s ease-in-out infinite; }
+
+  /* ─── HERO ──────────────────────────────────── */
+  #hero { position:relative; height:100vh; min-height:700px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  #hero-video { position:absolute; inset:0; width:100%; height:115%; object-fit:cover; opacity:.28; filter:brightness(.9) saturate(.7); transform:translateY(0); transition:transform .1s linear; }
+  .hero-overlay { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(250,247,240,.25) 0%, rgba(250,247,240,.05) 40%, rgba(250,247,240,.65) 80%, #FAF7F0 100%); }
+  .hero-grid    { position:absolute; inset:0; background-image:linear-gradient(var(--gold-muted) 1px,transparent 1px),linear-gradient(90deg,var(--gold-muted) 1px,transparent 1px); background-size:80px 80px; -webkit-mask-image:radial-gradient(ellipse 75% 75% at 50% 50%,black,transparent); mask-image:radial-gradient(ellipse 75% 75% at 50% 50%,black,transparent); }
+
+  .hero-badge    { animation:fadeUp .8s cubic-bezier(.22,1,.36,1) .4s both; }
+  .hero-title    { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .85s both; }
+  .hero-tagline  { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) 1.3s both; }
+  .hero-btns     { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) 1.7s both; }
+  .hero-scroll   { animation:fadeIn 1s ease 2.4s both; }
+
+  /* Word-by-word blur-in */
+  .blur-word { display:inline-block; opacity:0; filter:blur(8px); animation:blurIn .55s ease forwards; margin-right:.25em; }
+  @keyframes blurIn { to { opacity:1; filter:blur(0px); } }
+
+  /* Scroll line */
+  .scroll-line { width:1px; background:linear-gradient(to bottom,var(--gold),transparent); animation:scrollLine 2.2s ease-in-out infinite; }
+
+  /* ─── BUTTONS ───────────────────────────────── */
+  .btn-primary {
+    position:relative; overflow:hidden; background:var(--gold); color:#1A1209;
+    padding:14px 36px; border:none; cursor:none;
+    font-family:'Jost',sans-serif; font-size:.72rem; font-weight:500;
+    letter-spacing:.28em; text-transform:uppercase; transition:background .3s,transform .3s;
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .btn-primary::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); transition:left .5s ease; }
+  .btn-primary:hover { background:var(--gold-light); transform:translateY(-2px); }
+  .btn-primary:hover::before { left:100%; }
+  .btn-outline {
+    position:relative; overflow:hidden; background:transparent; color:var(--ink);
+    padding:13px 36px; border:1.5px solid var(--gold-dark); cursor:none;
+    font-family:'Jost',sans-serif; font-size:.72rem; font-weight:400;
+    letter-spacing:.28em; text-transform:uppercase; transition:all .35s;
+    display:inline-flex; align-items:center; justify-content:center; text-decoration:none;
+  }
+  .btn-outline::before { content:''; position:absolute; inset:0; background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform .35s ease; z-index:0; }
+  .btn-outline:hover { color:#1A1209; border-color:var(--gold); }
+  .btn-outline:hover::before { transform:scaleX(1); }
+  .btn-outline span { position:relative; z-index:1; }
+
+  /* ─── NAV ───────────────────────────────────── */
+  nav { position:fixed; top:0; left:0; right:0; z-index:1000; padding:0 5%; display:flex; align-items:center; justify-content:space-between; height:80px; transition:all .5s ease; }
+  nav.scrolled { background:rgba(250,247,240,.93); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid var(--gold-muted); height:64px; }
+  .nav-logo-main { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; color:var(--gold); letter-spacing:.15em; line-height:1; }
+  .nav-logo-sub  { font-size:.48rem; letter-spacing:.55em; color:#AAA; text-transform:uppercase; font-family:'Jost',sans-serif; }
+  .nav-link { font-size:.64rem; letter-spacing:.22em; text-transform:uppercase; color:#5A4A3A; text-decoration:none; position:relative; padding-bottom:2px; transition:color .3s; font-family:'Jost',sans-serif; background:none; border:none; cursor:none; }
+  .nav-link::after { content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:var(--gold); transition:width .4s ease; }
+  .nav-link:hover { color:var(--gold); }
+  .nav-link:hover::after { width:100%; }
+  .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:none; padding:4px; }
+  .hamburger span { width:26px; height:1.5px; background:var(--gold); display:block; transition:all .35s; }
+  .hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(4px,4px); }
+  .hamburger.open span:nth-child(2) { opacity:0; }
+  .hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(4px,-4px); }
+
+  /* Mobile menu */
+  #mobile-menu { position:fixed; inset:0; z-index:900; background:#FAF7F0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:36px; transform:translateX(100%); transition:transform .45s cubic-bezier(.22,1,.36,1); }
+  #mobile-menu.open { transform:translateX(0); }
+  .mob-link { font-family:'Cormorant Garamond',serif; font-size:2.2rem; color:#1A1209; text-decoration:none; transition:color .3s; background:none; border:none; cursor:none; }
+  .mob-link:hover { color:var(--gold); }
+
+  /* ─── SECTION LABEL ─────────────────────────── */
+  .sec-label { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .sec-label::before { content:''; width:0; height:1px; background:var(--gold-dark); display:block; animation:expandLine .7s ease forwards; }
+  @keyframes expandLine { to { width:32px; } }
+  .sec-label-text { font-size:.58rem; letter-spacing:.52em; text-transform:uppercase; color:var(--gold); font-family:'Jost',sans-serif; }
+  .sec-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,4vw,3.5rem); font-weight:400; line-height:1.1; color:#1A1209; }
+  .sec-title em { color:var(--gold); font-style:italic; }
+  .sec-body { font-size:.92rem; line-height:1.9; color:#7A6A5A; font-family:'Jost',sans-serif; }
+
+  /* ─── STATS ─────────────────────────────────── */
+  .stat-num { font-family:'Cormorant Garamond',serif; font-size:clamp(2.4rem,4vw,4rem); font-weight:300; color:var(--gold); line-height:1; }
+  .stat-lbl { font-size:.58rem; letter-spacing:.35em; text-transform:uppercase; color:#AAA; margin-top:6px; font-family:'Jost',sans-serif; }
+
+  /* ─── VENUE CARDS ───────────────────────────── */
+  .venue-card { position:relative; overflow:hidden; cursor:none; }
+  .venue-card img { width:100%; height:100%; object-fit:cover; transition:transform .75s ease, filter .75s ease; display:block; }
+  .venue-card:hover img { transform:scale(1.09); filter:brightness(.45); }
+  .venue-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(26,18,9,.9) 0%,transparent 55%); pointer-events:none; }
+  .venue-info { position:absolute; bottom:0; left:0; right:0; padding:28px; }
+  .venue-desc-text { max-height:0; overflow:hidden; opacity:0; transition:max-height .45s ease, opacity .4s ease .05s; font-size:.82rem; color:#D4C5A0; font-family:'Jost',sans-serif; line-height:1.7; margin-top:10px; }
+  .venue-card:hover .venue-desc-text { max-height:80px; opacity:1; }
+
+  /* ─── SERVICE CARDS ─────────────────────────── */
+  .svc-card { position:relative; overflow:hidden; padding:44px 36px; border:1px solid var(--gold-muted); background:#FAF7F0; transition:background .4s ease, border-color .4s ease; }
+  .svc-card::before { content:''; position:absolute; top:0; left:0; width:0; height:2px; background:var(--gold); transition:width .5s ease; }
+  .svc-card:hover { background:#F5EBD5; border-color:var(--gold); }
+  .svc-card:hover::before { width:100%; }
+  .svc-card-glow { position:absolute; inset:0; background:radial-gradient(250px circle at 50% 0%,rgba(184,150,12,.07),transparent); opacity:0; transition:opacity .4s; pointer-events:none; }
+  .svc-card:hover .svc-card-glow { opacity:1; }
+  .svc-num { position:absolute; top:20px; right:24px; font-family:'Cormorant Garamond',serif; font-size:3.5rem; font-weight:300; color:rgba(184,150,12,.1); line-height:1; }
+
+  /* ─── GALLERY ───────────────────────────────── */
+  .gallery-item { overflow:hidden; position:relative; cursor:none; }
+  .gallery-item img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .65s ease; }
+  .gallery-item:hover img { transform:scale(1.07); }
+  .gallery-hover-label { position:absolute; inset:0; background:rgba(26,18,9,.5); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .35s ease; }
+  .gallery-item:hover .gallery-hover-label { opacity:1; }
+  .gallery-label-text { font-size:.58rem; letter-spacing:.42em; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold); padding:9px 18px; font-family:'Jost',sans-serif; }
+
+  /* ─── WHY POINTS ────────────────────────────── */
+  .why-point { display:flex; gap:20px; align-items:flex-start; padding:24px 12px; border-bottom:1px solid var(--gold-muted); transition:background .3s ease, padding-left .3s ease; }
+  .why-point:hover { background:rgba(184,150,12,.04); padding-left:20px; }
+  .why-icon-box { width:46px; height:46px; border:1px solid var(--gold-muted); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; transition:background .3s, border-color .3s; }
+  .why-point:hover .why-icon-box { border-color:var(--gold); background:rgba(184,150,12,.08); }
+
+  /* ─── TESTIMONIALS MARQUEE ──────────────────── */
+  .marquee-track { display:flex; gap:24px; width:max-content; animation:marqueeFwd 32s linear infinite; }
+  .marquee-track:hover { animation-play-state:paused; }
+  .testi-card { flex-shrink:0; width:340px; padding:36px; background:#F5EBD5; border:1px solid var(--gold-muted); position:relative; }
+  .testi-card::before { content:'"'; font-family:'Cormorant Garamond',serif; font-size:7rem; color:rgba(184,150,12,.1); position:absolute; top:10px; left:28px; line-height:1; font-weight:300; }
+
+  /* ─── CONTACT FORM ──────────────────────────── */
+  .form-input { background:#F5EBD5; border:1px solid var(--gold-muted); color:#1A1209; padding:13px 16px; font-family:'Jost',sans-serif; font-size:.9rem; outline:none; width:100%; transition:border-color .3s; }
+  .form-input:focus { border-color:var(--gold); }
+  .form-input::placeholder { color:#AAA; }
+  .form-label { font-size:.58rem; letter-spacing:.35em; text-transform:uppercase; color:#999; margin-bottom:6px; display:block; font-family:'Jost',sans-serif; }
+
+  /* ─── PARALLAX DIVIDER ──────────────────────── */
+  .parallax-section { position:relative; height:380px; overflow:hidden; }
+  .parallax-bg { position:absolute; inset:-60px 0; background-attachment:fixed; background-size:cover; background-position:center; filter:brightness(.18) saturate(.5); }
+  .parallax-content { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; text-align:center; padding:0 24px; }
+  .parallax-line { width:80px; height:1px; background:var(--gold); }
+
+  /* ─── FOOTER ────────────────────────────────── */
+  footer { background:#1A1209; padding:70px 5% 28px; }
+  .footer-link { color:#666; font-size:.82rem; font-family:'Jost',sans-serif; text-decoration:none; display:flex; align-items:center; gap:8px; transition:color .3s; }
+  .footer-link:hover { color:#C4B9A0; }
+  .social-btn { width:34px; height:34px; border:1px solid rgba(184,150,12,.25); display:flex; align-items:center; justify-content:center; color:#555; text-decoration:none; font-size:.8rem; transition:all .3s; }
+  .social-btn:hover { border-color:var(--gold); color:var(--gold); }
+
+  /* ─── IMAGE FRAME ───────────────────────────── */
+  .img-frame { position:relative; }
+  .img-frame::before { content:''; position:absolute; top:-16px; left:-16px; right:16px; bottom:16px; border:1px solid var(--gold-muted); z-index:0; }
+  .img-frame img { position:relative; z-index:1; }
+  .frame-badge { position:absolute; bottom:-24px; right:-24px; z-index:2; background:var(--gold); width:120px; height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; animation:rotateBadge .6s cubic-bezier(.34,1.56,.64,1) both; }
+
+  /* ─── SPOTLIGHT ─────────────────────────────── */
+  #spotlight { position:absolute; inset:0; pointer-events:none; z-index:10; transition:background .1s; }
+
+  /* ─── SVG BEAMS ─────────────────────────────── */
+  .beam-line { stroke-dasharray:200; animation:beamPulse 4s ease-in-out infinite; }
+
+  /* ─── FORM SUCCESS ──────────────────────────── */
+  #form-success { display:none; text-align:center; padding:60px 20px; }
+
+  /* RESPONSIVE */
+  @media(max-width:768px) {
+    .nav-link, .nav-book-btn { display:none; }
+    .hamburger { display:flex; }
+    .stats-grid { grid-template-columns:1fr 1fr !important; }
+    .about-grid { grid-template-columns:1fr !important; }
+    .contact-grid { grid-template-columns:1fr !important; }
+    .why-grid { grid-template-columns:1fr !important; }
+    .gallery-grid { grid-template-columns:1fr 1fr !important; grid-template-rows:auto !important; }
+    .gallery-big { grid-column:span 2 !important; grid-row:span 1 !important; }
+    .svc-grid { grid-template-columns:1fr !important; }
+    .footer-grid { grid-template-columns:1fr 1fr !important; }
+  }
+  @media(max-width:520px){
+    .hero-title { font-size:clamp(2.4rem,10vw,3.2rem) !important; }
+    .footer-grid { grid-template-columns:1fr !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-text">ELARA</div>
+  <div class="loader-bar"></div>
+  <div class="loader-sub">Convention Centre · India</div>
+</div>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu">
+  <button class="mob-link" onclick="scrollTo('about')">About</button>
+  <button class="mob-link" onclick="scrollTo('venues')">Venues</button>
+  <button class="mob-link" onclick="scrollTo('services')">Services</button>
+  <button class="mob-link" onclick="scrollTo('gallery')">Gallery</button>
+  <button class="mob-link" onclick="scrollTo('testimonials')">Testimonials</button>
+  <button class="mob-link" onclick="scrollTo('contact')">Contact</button>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div onclick="window.scrollTo({top:0,behavior:'smooth'})" style="cursor:none">
+    <div class="nav-logo-main">ELARA</div>
+    <div class="nav-logo-sub">Convention Centre</div>
+  </div>
+  <div class="flex items-center gap-8">
+    <button class="nav-link" onclick="scrollTo('about')">About</button>
+    <button class="nav-link" onclick="scrollTo('venues')">Venues</button>
+    <button class="nav-link" onclick="scrollTo('services')">Services</button>
+    <button class="nav-link" onclick="scrollTo('gallery')">Gallery</button>
+    <button class="nav-link" onclick="scrollTo('testimonials')">Testimonials</button>
+    <button class="nav-link" onclick="scrollTo('contact')">Contact</button>
+  </div>
+  <div class="flex items-center gap-4">
+    <button class="nav-book-btn btn-outline" onclick="scrollTo('contact')"><span>Book Now</span></button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="hero">
+  <video id="hero-video" autoplay muted loop playsinline poster="https://images.pexels.com/photos/587741/pexels-photo-587741.jpeg?auto=compress&cs=tinysrgb&w=1920">
+    <source src="https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4" type="video/mp4" />
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-grid"></div>
+  <div id="spotlight"></div>
+
+  <!-- SVG Beams -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.1;pointer-events:none" xmlns="http://www.w3.org/2000/svg">
+    <line class="beam-line" x1="10%" y1="0" x2="32%" y2="100%" stroke="#B8960C" stroke-width=".6" style="animation-delay:0s"/>
+    <line class="beam-line" x1="22%" y1="0" x2="50%" y2="100%" stroke="#B8960C" stroke-width=".6" style="animation-delay:.6s"/>
+    <line class="beam-line" x1="38%" y1="0" x2="68%" y2="100%" stroke="#B8960C" stroke-width=".6" style="animation-delay:1.2s"/>
+    <line class="beam-line" x1="58%" y1="0" x2="80%" y2="100%" stroke="#B8960C" stroke-width=".6" style="animation-delay:1.8s"/>
+    <line class="beam-line" x1="74%" y1="0" x2="95%" y2="100%" stroke="#B8960C" stroke-width=".6" style="animation-delay:2.4s"/>
+    <line class="beam-line" x1="88%" y1="0" x2="50%" y2="100%" stroke="#B8960C" stroke-width=".6" style="animation-delay:3s"/>
+  </svg>
+
+  <div style="position:relative;z-index:20;text-align:center;padding:0 24px;max-width:920px">
+    <!-- Badge -->
+    <div class="hero-badge flex items-center justify-center gap-4 mb-8">
+      <span style="width:40px;height:1px;background:var(--gold-dark);display:block"></span>
+      <span style="font-size:.58rem;letter-spacing:.58em;text-transform:uppercase;color:var(--gold);font-family:'Jost',sans-serif">Est. 2009 · Grand Convention Centre · India</span>
+      <span style="width:40px;height:1px;background:var(--gold-dark);display:block"></span>
+    </div>
+
+    <!-- Title with blur-in words -->
+    <h1 class="hero-title" id="hero-title" style="font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,7.5vw,6.8rem);font-weight:300;line-height:1.06;color:#1A1209;margin-bottom:22px"></h1>
+
+    <!-- Tagline -->
+    <p class="hero-tagline" style="font-size:clamp(.72rem,1.4vw,.9rem);letter-spacing:.38em;text-transform:uppercase;color:#5A4A3A;margin-bottom:48px;font-family:'Jost',sans-serif">
+      Where Celebrations Become Grand Memories
+    </p>
+
+    <!-- CTA Buttons -->
+    <div class="hero-btns flex flex-wrap gap-4 justify-center">
+      <button class="btn-primary" onclick="scrollTo('contact')">Book Your Event</button>
+      <button class="btn-outline" onclick="scrollTo('venues')"><span>Explore Venues</span></button>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="hero-scroll" style="position:absolute;bottom:38px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:9px">
+    <span style="font-size:.52rem;letter-spacing:.42em;text-transform:uppercase;color:#AAA;font-family:'Jost',sans-serif">Scroll</span>
+    <div class="scroll-line" style="width:1px"></div>
+  </div>
+</section>
+
+<!-- ═══════════ STATS ═══════════ -->
+<div style="background:#F2EBD9;border-top:1px solid var(--gold-muted);border-bottom:1px solid var(--gold-muted);padding:0 5%">
+  <div class="stats-grid" style="display:grid;grid-template-columns:repeat(4,1fr)">
+    <div class="reveal text-center" style="padding:50px 20px;border-right:1px solid var(--gold-muted)">
+      <div class="stat-num" data-count="500" data-suffix="+">0+</div>
+      <div class="stat-lbl">Events Annually</div>
+    </div>
+    <div class="reveal d1 text-center" style="padding:50px 20px;border-right:1px solid var(--gold-muted)">
+      <div class="stat-num" data-count="12" data-suffix="">0</div>
+      <div class="stat-lbl">Distinct Venues</div>
+    </div>
+    <div class="reveal d2 text-center" style="padding:50px 20px;border-right:1px solid var(--gold-muted)">
+      <div class="stat-num" data-count="5000" data-suffix="+">0+</div>
+      <div class="stat-lbl">Guest Capacity</div>
+    </div>
+    <div class="reveal d3 text-center" style="padding:50px 20px">
+      <div class="stat-num" data-count="15" data-suffix="+">0+</div>
+      <div class="stat-lbl">Years of Excellence</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ABOUT ═══════════ -->
+<section id="about" style="padding:120px 5%;background:#FAF7F0">
+  <div class="about-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px;margin:0 auto">
+
+    <!-- Image -->
+    <div class="reveal-left">
+      <div class="img-frame">
+        <img src="https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=900"
+          alt="Grand Elara Interior"
+          style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block;position:relative;z-index:1;transition:transform .7s ease"
+          onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'"/>
+        <div class="frame-badge" style="animation-delay:.5s">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:600;line-height:1;color:#1A1209">15</span>
+          <span style="font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:#1A1209;font-family:'Jost',sans-serif;text-align:center;margin-top:2px">Years of<br>Excellence</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="reveal-right">
+      <div class="sec-label"><span class="sec-label-text">Our Story</span></div>
+      <h2 class="sec-title" style="margin-bottom:22px">A Legacy of<br><em>Unmatched Grandeur</em></h2>
+      <p class="sec-body" style="margin-bottom:16px">Grand Elara Convention Centre stands as a beacon of refinement and elegance in the heart of the city. We have curated an unparalleled space where every celebration, conference, and gathering is transformed into an unforgettable experience.</p>
+      <p class="sec-body" style="margin-bottom:48px">Our team of dedicated professionals ensures every detail — from the floral centrepieces to acoustic design — is executed to perfection, making each event a testament to luxury and precision.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="reveal d1 flex items-start gap-3">
+          <div style="width:32px;height:32px;border:1px solid var(--gold-dark);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;color:var(--gold)">✦</div>
+          <div><div style="font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#2A1A0A;font-weight:500;margin-bottom:3px;font-family:'Jost',sans-serif">Prime Location</div><div style="font-size:.78rem;color:#888;font-family:'Jost',sans-serif">City centre, seamlessly connected</div></div>
+        </div>
+        <div class="reveal d2 flex items-start gap-3">
+          <div style="width:32px;height:32px;border:1px solid var(--gold-dark);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;color:var(--gold)">◈</div>
+          <div><div style="font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#2A1A0A;font-weight:500;margin-bottom:3px;font-family:'Jost',sans-serif">Premium Interiors</div><div style="font-size:.78rem;color:#888;font-family:'Jost',sans-serif">Architecturally designed spaces</div></div>
+        </div>
+        <div class="reveal d3 flex items-start gap-3">
+          <div style="width:32px;height:32px;border:1px solid var(--gold-dark);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;color:var(--gold)">❋</div>
+          <div><div style="font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#2A1A0A;font-weight:500;margin-bottom:3px;font-family:'Jost',sans-serif">Expert Catering</div><div style="font-size:.78rem;color:#888;font-family:'Jost',sans-serif">Multi-cuisine culinary excellence</div></div>
+        </div>
+        <div class="reveal d4 flex items-start gap-3">
+          <div style="width:32px;height:32px;border:1px solid var(--gold-dark);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;color:var(--gold)">◇</div>
+          <div><div style="font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#2A1A0A;font-weight:500;margin-bottom:3px;font-family:'Jost',sans-serif">Technical Setup</div><div style="font-size:.78rem;color:#888;font-family:'Jost',sans-serif">State-of-the-art AV & lighting</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ VENUES ═══════════ -->
+<section id="venues" style="padding:120px 5%;background:#F5EBD5">
+  <div class="reveal text-center" style="max-width:560px;margin:0 auto 64px">
+    <div class="sec-label" style="justify-content:center"><span class="sec-label-text">Our Spaces</span></div>
+    <h2 class="sec-title" style="margin-bottom:16px">Iconic Venues for<br><em>Every Occasion</em></h2>
+    <p class="sec-body">From intimate gatherings to grand celebrations, each venue is crafted for extraordinary experiences.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;max-width:1200px;margin:0 auto">
+    <!-- Venue 1 - Big -->
+    <div class="venue-card reveal-left" style="aspect-ratio:3/4">
+      <img src="https://images.pexels.com/photos/1449791/pexels-photo-1449791.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Grand Ballroom" loading="lazy"/>
+      <div class="venue-overlay"></div>
+      <div class="venue-info">
+        <div style="font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);font-family:'Jost',sans-serif;margin-bottom:8px">Up to 2,000 Guests</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;color:#F5EDD8;margin-bottom:0">The Grand Ballroom</h3>
+        <div class="venue-desc-text">Our crown jewel — a palatial ballroom with 30-ft chandeliers, marble floors, and a private bridal suite.</div>
+      </div>
+    </div>
+
+    <!-- Venue 2,3,4 stacked -->
+    <div style="display:grid;grid-template-rows:1fr 1fr 1fr;gap:4px">
+      <div class="venue-card reveal-right d1" style="aspect-ratio:unset">
+        <img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Royal Hall" loading="lazy"/>
+        <div class="venue-overlay"></div>
+        <div class="venue-info">
+          <div style="font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);font-family:'Jost',sans-serif;margin-bottom:5px">Up to 800 Guests</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:#F5EDD8">Royal Durbar Hall</h3>
+          <div class="venue-desc-text">Opulent interiors with carved woodwork, ideal for corporate galas and cultural events.</div>
+        </div>
+      </div>
+      <div class="venue-card reveal-right d2" style="aspect-ratio:unset">
+        <img src="https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Conference" loading="lazy"/>
+        <div class="venue-overlay"></div>
+        <div class="venue-info">
+          <div style="font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);font-family:'Jost',sans-serif;margin-bottom:5px">Up to 300 Delegates</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:#F5EDD8">Executive Conference</h3>
+          <div class="venue-desc-text">Cutting-edge AV infrastructure for world-class summits and boardroom meetings.</div>
+        </div>
+      </div>
+      <div class="venue-card reveal-right d3" style="aspect-ratio:unset">
+        <img src="https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Garden Lawn" loading="lazy"/>
+        <div class="venue-overlay"></div>
+        <div class="venue-info">
+          <div style="font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);font-family:'Jost',sans-serif;margin-bottom:5px">Up to 1,500 Guests</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:#F5EDD8">Elara Garden Lawn</h3>
+          <div class="venue-desc-text">Manicured gardens, perfect for open-air weddings, cocktail evenings and outdoor events.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SERVICES ═══════════ -->
+<section id="services" style="padding:120px 5%;background:#FAF7F0;position:relative;overflow:hidden">
+  <!-- Lamp glow top -->
+  <div style="position:absolute;top:0;left:0;right:0;height:50%;background:conic-gradient(from 90deg at 50% 0%,transparent 28%,rgba(184,150,12,.1) 50%,transparent 72%);filter:blur(40px);pointer-events:none"></div>
+
+  <div class="reveal text-center" style="max-width:560px;margin:0 auto 64px;position:relative;z-index:1">
+    <div class="sec-label" style="justify-content:center"><span class="sec-label-text">What We Offer</span></div>
+    <h2 class="sec-title" style="margin-bottom:16px">Complete Event<br><em>Solutions</em></h2>
+    <p class="sec-body">End-to-end event management under one magnificent roof.</p>
+  </div>
+
+  <div class="svc-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;max-width:1200px;margin:0 auto;background:var(--gold-muted);position:relative;z-index:1">
+    <div class="svc-card reveal d1">
+      <div class="svc-card-glow"></div>
+      <div class="svc-num">01</div>
+      <div style="font-size:1.8rem;margin-bottom:18px">💍</div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:#1A1209;margin-bottom:13px">Weddings & Receptions</h3>
+      <p style="font-size:.83rem;color:#7A6A5A;line-height:1.85;font-family:'Jost',sans-serif">Bespoke wedding experiences — mehendi, sangeet, pheras, and receptions crafted with impeccable detail.</p>
+    </div>
+    <div class="svc-card reveal d2">
+      <div class="svc-card-glow"></div>
+      <div class="svc-num">02</div>
+      <div style="font-size:1.8rem;margin-bottom:18px">🏢</div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:#1A1209;margin-bottom:13px">Corporate Events</h3>
+      <p style="font-size:.83rem;color:#7A6A5A;line-height:1.85;font-family:'Jost',sans-serif">Product launches, AGMs, townhalls, award nights, and corporate retreats managed with professional precision.</p>
+    </div>
+    <div class="svc-card reveal d3">
+      <div class="svc-card-glow"></div>
+      <div class="svc-num">03</div>
+      <div style="font-size:1.8rem;margin-bottom:18px">🎪</div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:#1A1209;margin-bottom:13px">Exhibitions & Expos</h3>
+      <p style="font-size:.83rem;color:#7A6A5A;line-height:1.85;font-family:'Jost',sans-serif">Flexible halls with modular setups, high ceilings, and dedicated logistics support for trade shows.</p>
+    </div>
+    <div class="svc-card reveal d1">
+      <div class="svc-card-glow"></div>
+      <div class="svc-num">04</div>
+      <div style="font-size:1.8rem;margin-bottom:18px">🍽️</div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:#1A1209;margin-bottom:13px">Premium Catering</h3>
+      <p style="font-size:.83rem;color:#7A6A5A;line-height:1.85;font-family:'Jost',sans-serif">Curated multi-cuisine menus by executive chefs — North Indian, South Indian, Continental & International.</p>
+    </div>
+    <div class="svc-card reveal d2">
+      <div class="svc-card-glow"></div>
+      <div class="svc-num">05</div>
+      <div style="font-size:1.8rem;margin-bottom:18px">🌸</div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:#1A1209;margin-bottom:13px">Décor & Design</h3>
+      <p style="font-size:.83rem;color:#7A6A5A;line-height:1.85;font-family:'Jost',sans-serif">In-house décor with floral arrangements, theme concepts, lighting design, and custom stage setups.</p>
+    </div>
+    <div class="svc-card reveal d3">
+      <div class="svc-card-glow"></div>
+      <div class="svc-num">06</div>
+      <div style="font-size:1.8rem;margin-bottom:18px">🎙️</div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:#1A1209;margin-bottom:13px">Conferences & Summits</h3>
+      <p style="font-size:.83rem;color:#7A6A5A;line-height:1.85;font-family:'Jost',sans-serif">State-of-the-art AV, interpreting booths, and live streaming capabilities for global conferences.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ GALLERY ═══════════ -->
+<section id="gallery" style="padding:120px 5%;background:#F5EBD5">
+  <div class="reveal text-center" style="max-width:560px;margin:0 auto 56px">
+    <div class="sec-label" style="justify-content:center"><span class="sec-label-text">Visual Tour</span></div>
+    <h2 class="sec-title">Moments That<br><em>Last Forever</em></h2>
+  </div>
+
+  <div class="gallery-grid" style="display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:280px 280px;gap:4px;max-width:1200px;margin:0 auto">
+    <div class="gallery-item gallery-big reveal-scale" style="grid-column:span 2;grid-row:span 2">
+      <img src="https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Gallery 1" loading="lazy"/>
+      <div class="gallery-hover-label"><span class="gallery-label-text">Event Highlights</span></div>
+    </div>
+    <div class="gallery-item reveal-scale d1">
+      <img src="https://images.pexels.com/photos/1838938/pexels-photo-1838938.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Gallery 2" loading="lazy"/>
+      <div class="gallery-hover-label"><span class="gallery-label-text">Décor & Design</span></div>
+    </div>
+    <div class="gallery-item reveal-scale d2">
+      <img src="https://images.pexels.com/photos/267507/pexels-photo-267507.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Gallery 3" loading="lazy"/>
+      <div class="gallery-hover-label"><span class="gallery-label-text">Dining Setup</span></div>
+    </div>
+    <div class="gallery-item reveal-scale d3">
+      <img src="https://images.pexels.com/photos/210764/pexels-photo-210764.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Gallery 4" loading="lazy"/>
+      <div class="gallery-hover-label"><span class="gallery-label-text">Premium Interiors</span></div>
+    </div>
+    <div class="gallery-item reveal-scale d4">
+      <img src="https://images.pexels.com/photos/2306281/pexels-photo-2306281.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Gallery 5" loading="lazy"/>
+      <div class="gallery-hover-label"><span class="gallery-label-text">Venue Spaces</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PARALLAX CTA ═══════════ -->
+<div class="parallax-section">
+  <div class="parallax-bg" style="background-image:url('https://images.pexels.com/photos/3062541/pexels-photo-3062541.jpeg?auto=compress&cs=tinysrgb&w=1920')"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(250,247,240,.05),rgba(184,150,12,.08),rgba(250,247,240,.05))"></div>
+  <div class="parallax-content">
+    <div class="parallax-line reveal"></div>
+    <h2 class="reveal d1" style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3.2rem);font-weight:300;color:#FAF7F0;line-height:1.25">
+      <em style="color:var(--gold);font-style:italic">Every Detail</em>, Perfected.<br>Every Memory, Treasured.
+    </h2>
+    <div class="parallax-line reveal d2"></div>
+    <div class="reveal d3">
+      <button class="btn-primary" onclick="scrollTo('contact')">Start Planning Your Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ WHY CHOOSE US ═══════════ -->
+<section id="why" style="padding:120px 5%;background:#FAF7F0">
+  <div class="why-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px;margin:0 auto">
+
+    <div class="reveal-left">
+      <div class="sec-label"><span class="sec-label-text">Why Elara</span></div>
+      <h2 class="sec-title" style="margin-bottom:14px">The Elara<br><em>Difference</em></h2>
+      <p class="sec-body" style="margin-bottom:48px;max-width:430px">We go beyond venue rental — we become partners in your vision, ensuring every moment is extraordinary.</p>
+
+      <div>
+        <div class="why-point reveal d1">
+          <div class="why-icon-box">📍</div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:#1A1209;margin-bottom:5px">Prime City Centre Location</div>
+            <div style="font-size:.82rem;color:#7A6A5A;line-height:1.7;font-family:'Jost',sans-serif">Easily accessible by metro, road, and air with luxury hotels in walking distance.</div>
+          </div>
+        </div>
+        <div class="why-point reveal d2">
+          <div class="why-icon-box">🚗</div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:#1A1209;margin-bottom:5px">Vast Parking Facility</div>
+            <div style="font-size:.82rem;color:#7A6A5A;line-height:1.7;font-family:'Jost',sans-serif">1,200+ cars and 200+ two-wheelers with premium valet service — zero logistics stress.</div>
+          </div>
+        </div>
+        <div class="why-point reveal d3">
+          <div class="why-icon-box">👨‍💼</div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:#1A1209;margin-bottom:5px">Dedicated Event Manager</div>
+            <div style="font-size:.82rem;color:#7A6A5A;line-height:1.7;font-family:'Jost',sans-serif">A personal event coordinator from enquiry to execution — your single point of contact.</div>
+          </div>
+        </div>
+        <div class="why-point reveal d4">
+          <div class="why-icon-box">🏅</div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:#1A1209;margin-bottom:5px">Award-Winning Venue</div>
+            <div style="font-size:.82rem;color:#7A6A5A;line-height:1.7;font-family:'Jost',sans-serif">Recognised as India's Best Convention Centre for three consecutive years.</div>
+          </div>
+        </div>
+        <div class="why-point reveal d5">
+          <div class="why-icon-box">🔒</div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:#1A1209;margin-bottom:5px">24/7 Security & Surveillance</div>
+            <div style="font-size:.82rem;color:#7A6A5A;line-height:1.7;font-family:'Jost',sans-serif">Advanced CCTV, trained personnel, and access control for a safe, secure experience.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal-right" style="position:relative">
+      <img src="https://images.pexels.com/photos/1345729/pexels-photo-1345729.jpeg?auto=compress&cs=tinysrgb&w=900"
+        alt="Elara Interior"
+        style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;transition:transform .7s ease"
+        onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'"/>
+      <div style="position:absolute;bottom:-20px;right:-20px;width:160px;height:160px;border:1px solid var(--gold-muted);z-index:-1"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TESTIMONIALS ═══════════ -->
+<section id="testimonials" style="padding:120px 0;background:#F5EBD5;overflow:hidden">
+  <div class="reveal text-center" style="max-width:560px;margin:0 auto 64px;padding:0 20px">
+    <div class="sec-label" style="justify-content:center"><span class="sec-label-text">Client Stories</span></div>
+    <h2 class="sec-title">Voices of Our<br><em>Cherished Guests</em></h2>
+  </div>
+
+  <div style="overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent)">
+    <div class="marquee-track">
+      <!-- Cards × 2 for seamless loop -->
+      <div class="testi-card">
+        <div style="color:var(--gold);font-size:.95rem;margin-bottom:16px;letter-spacing:.3em">★★★★★</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#4A3728;line-height:1.85;margin-bottom:24px;position:relative;z-index:1">"Our daughter's wedding at Grand Elara was nothing short of magical. Every detail was executed flawlessly — from the breathtaking floral décor to the exquisite cuisine."</p>
+        <div style="color:var(--gold);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:4px">Rajesh & Meena Sharma</div>
+        <div style="color:#888;font-size:.75rem;font-family:'Jost',sans-serif">Wedding Reception · Grand Ballroom</div>
+      </div>
+      <div class="testi-card">
+        <div style="color:var(--gold);font-size:.95rem;margin-bottom:16px;letter-spacing:.3em">★★★★★</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#4A3728;line-height:1.85;margin-bottom:24px;position:relative;z-index:1">"We've hosted our annual summit at various venues, but Grand Elara stands in a class of its own. The AV infrastructure, professional staff, and ambiance are simply unmatched."</p>
+        <div style="color:var(--gold);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:4px">Priya Krishnamurthy</div>
+        <div style="color:#888;font-size:.75rem;font-family:'Jost',sans-serif">CEO, TechCorp India · Corporate Summit</div>
+      </div>
+      <div class="testi-card">
+        <div style="color:var(--gold);font-size:.95rem;margin-bottom:16px;letter-spacing:.3em">★★★★★</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#4A3728;line-height:1.85;margin-bottom:24px;position:relative;z-index:1">"Elara made our charity gala an unforgettable evening. The team was incredibly attentive, the catering was world-class, and the venue looked absolutely stunning."</p>
+        <div style="color:var(--gold);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:4px">Ananya Mehta</div>
+        <div style="color:#888;font-size:.75rem;font-family:'Jost',sans-serif">Charity Gala · Royal Durbar Hall</div>
+      </div>
+      <div class="testi-card">
+        <div style="color:var(--gold);font-size:.95rem;margin-bottom:16px;letter-spacing:.3em">★★★★★</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#4A3728;line-height:1.85;margin-bottom:24px;position:relative;z-index:1">"Our international trade expo was seamlessly managed by the Elara team. Logistics, setup, catering, and guest management — everything handled with exceptional professionalism."</p>
+        <div style="color:var(--gold);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:4px">Vikram Nair</div>
+        <div style="color:#888;font-size:.75rem;font-family:'Jost',sans-serif">Director, Global Trade Forum · Exhibition</div>
+      </div>
+      <div class="testi-card">
+        <div style="color:var(--gold);font-size:.95rem;margin-bottom:16px;letter-spacing:.3em">★★★★★</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#4A3728;line-height:1.85;margin-bottom:24px;position:relative;z-index:1">"From the moment we walked in, we knew Elara was different. The attention to detail and warmth made our corporate conference the best we've ever organised."</p>
+        <div style="color:var(--gold);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:4px">Deepa Rao</div>
+        <div style="color:#888;font-size:.75rem;font-family:'Jost',sans-serif">VP Marketing, InnovateCo · Conference</div>
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="testi-card">
+        <div style="color:var(--gold);font-size:.95rem;margin-bottom:16px;letter-spacing:.3em">★★★★★</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#4A3728;line-height:1.85;margin-bottom:24px;position:relative;z-index:1">"Our daughter's wedding at Grand Elara was nothing short of magical. Every detail was executed flawlessly — from the breathtaking floral décor to the exquisite cuisine."</p>
+        <div style="color:var(--gold);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:4px">Rajesh & Meena Sharma</div>
+        <div style="color:#888;font-size:.75rem;font-family:'Jost',sans-serif">Wedding Reception · Grand Ballroom</div>
+      </div>
+      <div class="testi-card">
+        <div style="color:var(--gold);font-size:.95rem;margin-bottom:16px;letter-spacing:.3em">★★★★★</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#4A3728;line-height:1.85;margin-bottom:24px;position:relative;z-index:1">"We've hosted our annual summit at various venues, but Grand Elara stands in a class of its own. The AV infrastructure, professional staff, and ambiance are simply unmatched."</p>
+        <div style="color:var(--gold);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:4px">Priya Krishnamurthy</div>
+        <div style="color:#888;font-size:.75rem;font-family:'Jost',sans-serif">CEO, TechCorp India · Corporate Summit</div>
+      </div>
+      <div class="testi-card">
+        <div style="color:var(--gold);font-size:.95rem;margin-bottom:16px;letter-spacing:.3em">★★★★★</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#4A3728;line-height:1.85;margin-bottom:24px;position:relative;z-index:1">"Elara made our charity gala an unforgettable evening. The team was incredibly attentive, the catering was world-class, and the venue looked absolutely stunning."</p>
+        <div style="color:var(--gold);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:4px">Ananya Mehta</div>
+        <div style="color:#888;font-size:.75rem;font-family:'Jost',sans-serif">Charity Gala · Royal Durbar Hall</div>
+      </div>
+      <div class="testi-card">
+        <div style="color:var(--gold);font-size:.95rem;margin-bottom:16px;letter-spacing:.3em">★★★★★</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#4A3728;line-height:1.85;margin-bottom:24px;position:relative;z-index:1">"Our international trade expo was seamlessly managed by the Elara team. Logistics, setup, catering, and guest management — everything handled with exceptional professionalism."</p>
+        <div style="color:var(--gold);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:4px">Vikram Nair</div>
+        <div style="color:#888;font-size:.75rem;font-family:'Jost',sans-serif">Director, Global Trade Forum · Exhibition</div>
+      </div>
+      <div class="testi-card">
+        <div style="color:var(--gold);font-size:.95rem;margin-bottom:16px;letter-spacing:.3em">★★★★★</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#4A3728;line-height:1.85;margin-bottom:24px;position:relative;z-index:1">"From the moment we walked in, we knew Elara was different. The attention to detail and warmth made our corporate conference the best we've ever organised."</p>
+        <div style="color:var(--gold);font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:4px">Deepa Rao</div>
+        <div style="color:#888;font-size:.75rem;font-family:'Jost',sans-serif">VP Marketing, InnovateCo · Conference</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section id="contact" style="padding:120px 5%;background:#FAF7F0">
+  <div class="contact-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;max-width:1200px;margin:0 auto">
+
+    <!-- Info -->
+    <div class="reveal-left">
+      <div class="sec-label"><span class="sec-label-text">Get In Touch</span></div>
+      <h2 class="sec-title" style="margin-bottom:14px">Plan Your<br><em>Perfect Event</em></h2>
+      <p class="sec-body" style="margin-bottom:48px">Begin your event journey with a conversation. Our event specialists are ready to bring your vision to life.</p>
+
+      <div style="display:flex;flex-direction:column;gap:28px">
+        <div class="reveal d1 flex items-start gap-5">
+          <div style="width:44px;height:44px;border:1px solid var(--gold-muted);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">📞</div>
+          <div><span style="font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:#999;margin-bottom:6px;display:block;font-family:'Jost',sans-serif">Phone</span><div style="font-size:.88rem;color:#3A2A1A;line-height:1.7;font-family:'Jost',sans-serif">+91 98765 43210<br>+91 80 1234 5678</div></div>
+        </div>
+        <div class="reveal d2 flex items-start gap-5">
+          <div style="width:44px;height:44px;border:1px solid var(--gold-muted);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">✉️</div>
+          <div><span style="font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:#999;margin-bottom:6px;display:block;font-family:'Jost',sans-serif">Email</span><div style="font-size:.88rem;color:#3A2A1A;line-height:1.7;font-family:'Jost',sans-serif">events@grandelara.in<br>bookings@grandelara.in</div></div>
+        </div>
+        <div class="reveal d3 flex items-start gap-5">
+          <div style="width:44px;height:44px;border:1px solid var(--gold-muted);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">📍</div>
+          <div><span style="font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:#999;margin-bottom:6px;display:block;font-family:'Jost',sans-serif">Address</span><div style="font-size:.88rem;color:#3A2A1A;line-height:1.7;font-family:'Jost',sans-serif">Grand Elara Convention Centre<br>[Your Address], [City] – [Pincode]<br>[State], India</div></div>
+        </div>
+        <div class="reveal d4 flex items-start gap-5">
+          <div style="width:44px;height:44px;border:1px solid var(--gold-muted);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">🕐</div>
+          <div><span style="font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:#999;margin-bottom:6px;display:block;font-family:'Jost',sans-serif">Hours</span><div style="font-size:.88rem;color:#3A2A1A;line-height:1.7;font-family:'Jost',sans-serif">Monday – Saturday: 9 AM – 7 PM<br>Sunday: 10 AM – 5 PM</div></div>
+        </div>
+      </div>
+
+      <!-- Map placeholder -->
+      <div style="margin-top:36px;height:200px;border:1px solid var(--gold-muted);background:#F2EBD9;background-image:linear-gradient(var(--gold-muted) 1px,transparent 1px),linear-gradient(90deg,var(--gold-muted) 1px,transparent 1px);background-size:28px 28px;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:#BBB;font-family:'Jost',sans-serif">📍 Google Map Embed Here</span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="reveal-right">
+      <div style="background:#F5EBD5;border:1px solid var(--gold-muted);padding:48px 40px">
+        <div id="form-main">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:#1A1209;margin-bottom:6px">Send an Enquiry</div>
+          <div style="font-size:.62rem;letter-spacing:.22em;color:#AAA;text-transform:uppercase;margin-bottom:30px;font-family:'Jost',sans-serif">We'll respond within 24 hours</div>
+          <form onsubmit="submitForm(event)" style="display:flex;flex-direction:column;gap:16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div><label class="form-label">Full Name *</label><input type="text" required class="form-input" placeholder="Your Name"></div>
+              <div><label class="form-label">Phone *</label><input type="tel" required class="form-input" placeholder="+91 XXXXX XXXXX"></div>
+            </div>
+            <div><label class="form-label">Email Address *</label><input type="email" required class="form-input" placeholder="your@email.com"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div>
+                <label class="form-label">Event Type</label>
+                <select class="form-input" style="cursor:none;appearance:none">
+                  <option value="">Select Event</option>
+                  <option>Wedding</option><option>Corporate Event</option><option>Conference</option><option>Exhibition</option><option>Social Function</option><option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">Guest Count</label>
+                <select class="form-input" style="cursor:none;appearance:none">
+                  <option value="">Approx. Guests</option>
+                  <option>Below 100</option><option>100–300</option><option>300–500</option><option>500–1000</option><option>1000–2000</option><option>2000+</option>
+                </select>
+              </div>
+            </div>
+            <div><label class="form-label">Preferred Date</label><input type="date" class="form-input"></div>
+            <div><label class="form-label">Message</label><textarea rows="4" class="form-input" placeholder="Tell us about your vision..." style="resize:vertical"></textarea></div>
+            <button type="submit" class="btn-primary" style="width:100%;padding:16px;font-size:.72rem">Send Enquiry</button>
+          </form>
+        </div>
+        <div id="form-success" style="text-align:center;padding:60px 20px">
+          <div style="font-size:2.5rem;margin-bottom:16px;animation:goldPulse 2s ease infinite;display:inline-block">✦</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold);margin-bottom:12px">Thank You</div>
+          <div style="font-size:.85rem;color:#888;font-family:'Jost',sans-serif;line-height:1.7">Your enquiry has been received.<br>Our team will contact you within 24 hours.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-grid" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;padding-bottom:48px;border-bottom:1px solid rgba(184,150,12,.1);margin-bottom:24px">
+    <div>
+      <div style="font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:1.7rem;letter-spacing:.1em;margin-bottom:4px">Elara</div>
+      <div style="font-size:.48rem;letter-spacing:.55em;color:#444;text-transform:uppercase;font-family:'Jost',sans-serif;margin-bottom:18px">Convention Centre</div>
+      <p style="font-size:.82rem;color:#555;line-height:1.9;font-family:'Jost',sans-serif;margin-bottom:24px;max-width:270px">Where every celebration is transformed into a timeless memory. India's premier destination for luxury events.</p>
+      <div style="display:flex;gap:8px">
+        <a href="#" class="social-btn">f</a>
+        <a href="#" class="social-btn">in</a>
+        <a href="#" class="social-btn">𝕏</a>
+        <a href="#" class="social-btn">▶</a>
+        <a href="#" class="social-btn">li</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:.56rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-family:'Jost',sans-serif">Quick Links</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="#about" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> About Us</a>
+        <a href="#venues" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Our Venues</a>
+        <a href="#services" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Services</a>
+        <a href="#gallery" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Gallery</a>
+        <a href="#contact" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Contact</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:.56rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-family:'Jost',sans-serif">Venues</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="#venues" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Grand Ballroom</a>
+        <a href="#venues" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Royal Durbar Hall</a>
+        <a href="#venues" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Conference Centre</a>
+        <a href="#venues" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Garden Lawn</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:.56rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-family:'Jost',sans-serif">Services</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="#services" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Weddings</a>
+        <a href="#services" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Corporate Events</a>
+        <a href="#services" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Exhibitions</a>
+        <a href="#services" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Catering</a>
+        <a href="#services" class="footer-link"><span style="color:var(--gold-dark);font-size:.7rem">—</span> Décor & Design</a>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;font-size:.7rem;color:#444;font-family:'Jost',sans-serif">
+    <div>© 2024 Grand Elara Convention Centre. All rights reserved.</div>
+    <div style="display:flex;gap:20px">
+      <a href="#" style="color:var(--gold-dark);text-decoration:none">Privacy Policy</a>
+      <a href="#" style="color:var(--gold-dark);text-decoration:none">Terms of Service</a>
+      <a href="#" style="color:var(--gold-dark);text-decoration:none">Sitemap</a>
+    </div>
+    <div>Crafted with ✦ in India</div>
+  </div>
+</footer>
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+/* ─── CURSOR ──────────────────────────────────────── */
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left  = mx+'px';
+  dot.style.top   = my+'px';
+});
+(function animRing(){
+  rx += (mx-rx)*.13;
+  ry += (my-ry)*.13;
+  ring.style.left = rx+'px';
+  ring.style.top  = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.addEventListener('mouseleave',()=>{ dot.style.opacity='0'; ring.style.opacity='0'; });
+document.addEventListener('mouseenter',()=>{ dot.style.opacity='1'; ring.style.opacity='.55'; });
+
+/* ─── LOADER ──────────────────────────────────────── */
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('done'), 1600);
+});
+
+/* ─── NAV SCROLL ──────────────────────────────────── */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ─── HERO PARALLAX ───────────────────────────────── */
+window.addEventListener('scroll', () => {
+  const v = document.getElementById('hero-video');
+  if(v) v.style.transform = `translateY(${window.scrollY * 0.28}px)`;
+});
+
+/* ─── HERO SPOTLIGHT ──────────────────────────────── */
+document.getElementById('hero').addEventListener('mousemove', e => {
+  const sp = document.getElementById('spotlight');
+  const rect = e.currentTarget.getBoundingClientRect();
+  sp.style.background = `radial-gradient(500px circle at ${e.clientX-rect.left}px ${e.clientY-rect.top}px, rgba(184,150,12,.12) 0%, transparent 70%)`;
+});
+
+/* ─── HERO TITLE BLUR-IN ──────────────────────────── */
+const heroWords = ['Grand', 'Elara', 'Convention', 'Centre'];
+const titleEl = document.getElementById('hero-title');
+heroWords.forEach((w, i) => {
+  const sp = document.createElement('span');
+  sp.className = 'blur-word';
+  sp.textContent = w;
+  sp.style.animationDelay = (0.85 + i * 0.14) + 's';
+  if(w === 'Elara') sp.style.color = 'var(--gold)';
+  if(w === 'Grand' || w === 'Elara') { titleEl.appendChild(sp); }
+  else {
+    if(w === 'Convention') titleEl.appendChild(document.createElement('br'));
+    titleEl.appendChild(sp);
+  }
+});
+
+/* ─── SCROLL REVEAL ───────────────────────────────── */
+const revealEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale');
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('revealed'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+revealEls.forEach(el => revealObs.observe(el));
+
+/* ─── COUNTER ANIMATION ───────────────────────────── */
+const counterEls = document.querySelectorAll('[data-count]');
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = +el.dataset.count;
+    const suffix = el.dataset.suffix || '';
+    let current = 0;
+    const step = target / 70;
+    const timer = setInterval(() => {
+      current += step;
+      if(current >= target){ el.textContent = target.toLocaleString('en-IN') + suffix; clearInterval(timer); }
+      else el.textContent = Math.floor(current).toLocaleString('en-IN') + suffix;
+    }, 22);
+    counterObs.unobserve(el);
+  });
+}, { threshold: 0.6 });
+counterEls.forEach(el => counterObs.observe(el));
+
+/* ─── MOBILE MENU ─────────────────────────────────── */
+let menuOpen = false;
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  document.getElementById('mobile-menu').classList.toggle('open', menuOpen);
+  document.getElementById('hamburger').classList.toggle('open', menuOpen);
+}
+
+/* ─── SMOOTH SCROLL ───────────────────────────────── */
+function scrollTo(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  if(menuOpen) toggleMenu();
+}
+
+/* ─── FORM SUBMIT ─────────────────────────────────── */
+function submitForm(e) {
+  e.preventDefault();
+  document.getElementById('form-main').style.display = 'none';
+  const s = document.getElementById('form-success');
+  s.style.display = 'block';
+  s.style.animation = 'scaleIn .6s cubic-bezier(.34,1.56,.64,1)';
+}
+
+/* ─── WHY SECTION STAGGER FIX ─────────────────────── */
+/* Already handled by IntersectionObserver above */
+</script>
+</body>
+</html>
