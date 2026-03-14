@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Navy background -->
+  <rect width="64" height="64" fill="#00002D"/>
+
+  <!-- Gold corner accents -->
+  <path d="M4 4 L16 4 L16 5.5 L5.5 5.5 L5.5 16 L4 16 Z" fill="#C3A569" opacity="0.6"/>
+  <path d="M60 4 L48 4 L48 5.5 L58.5 5.5 L58.5 16 L60 16 Z" fill="#C3A569" opacity="0.6"/>
+  <path d="M4 60 L16 60 L16 58.5 L5.5 58.5 L5.5 48 L4 48 Z" fill="#C3A569" opacity="0.6"/>
+  <path d="M60 60 L48 60 L48 58.5 L58.5 58.5 L58.5 48 L60 48 Z" fill="#C3A569" opacity="0.6"/>
+
+  <!-- Stylised G letterform in Cormorant style -->
+  <text
+    x="32"
+    y="45"
+    text-anchor="middle"
+    font-family="Cormorant Garamond, Georgia, serif"
+    font-size="40"
+    font-weight="400"
+    fill="#C3A569"
+    letter-spacing="0"
+  >G</text>
+
+  <!-- Thin gold underline -->
+  <line x1="20" y1="52" x2="44" y2="52" stroke="#C3A569" stroke-width="1" opacity="0.5"/>
+</svg>
