@@ -1,0 +1,272 @@
+@use 'variables' as *;
+
+// ─── LOADER ────────────────────────────────────────────
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: $navy;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+  transition: opacity .8s ease, visibility .8s ease;
+}
+#loader.done { opacity: 0; visibility: hidden; }
+.loader-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  color: $gold; letter-spacing: .35em; font-weight: 300;
+}
+.loader-sub { font-size: .55rem; letter-spacing: .55em; text-transform: uppercase; color: rgba(195,165,105,0.5); font-family: 'Jost', sans-serif; }
+.loader-bar { width: 180px; height: 1px; background: $navy-3; position: relative; overflow: hidden; }
+.loader-bar::after {
+  content: ''; position: absolute; left: -100%; top: 0; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, $gold, transparent);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+// ─── BUTTONS ───────────────────────────────────────────
+.btn-primary {
+  position: relative; overflow: hidden;
+  background: $gold; color: $navy;
+  padding: 14px 36px; border: none; cursor: none;
+  font-family: 'Jost', sans-serif; font-size: .72rem; font-weight: 600;
+  letter-spacing: .28em; text-transform: uppercase;
+  transition: background .3s, transform .3s;
+  display: inline-flex; align-items: center; justify-content: center;
+
+  &::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+    transition: left .5s ease;
+  }
+  &:hover { background: $gold-light; transform: translateY(-2px); }
+  &:hover::before { left: 100%; }
+}
+
+.btn-outline {
+  position: relative; overflow: hidden;
+  background: transparent; color: $cream;
+  padding: 13px 36px; border: 1.5px solid $gold; cursor: none;
+  font-family: 'Jost', sans-serif; font-size: .72rem; font-weight: 400;
+  letter-spacing: .28em; text-transform: uppercase; transition: all .35s;
+  display: inline-flex; align-items: center; justify-content: center; text-decoration: none;
+
+  &::before {
+    content: ''; position: absolute; inset: 0;
+    background: $gold; transform: scaleX(0); transform-origin: left;
+    transition: transform .35s ease; z-index: 0;
+  }
+  &:hover { color: $navy; border-color: $gold; }
+  &:hover::before { transform: scaleX(1); }
+  span { position: relative; z-index: 1; }
+}
+
+.btn-outline-dark {
+  @extend .btn-outline;
+  color: $ink;
+  &:hover { color: $navy; }
+}
+
+// ─── SECTION LABELS ────────────────────────────────────
+.sec-label {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+  &::before {
+    content: ''; width: 0; height: 1px; background: $gold; display: block;
+    animation: expandLine .7s ease forwards;
+  }
+}
+.sec-label-text { font-size: .58rem; letter-spacing: .52em; text-transform: uppercase; color: $gold; font-family: 'Jost', sans-serif; }
+.sec-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 400; line-height: 1.1; color: $ink; }
+.sec-title em { color: $gold; font-style: italic; }
+.sec-title-light { @extend .sec-title; color: $cream; }
+.sec-title-light em { color: $gold; font-style: italic; }
+.sec-body { font-size: .92rem; line-height: 1.9; color: #5A6A7A; font-family: 'Jost', sans-serif; }
+.sec-body-light { @extend .sec-body; color: rgba(250,247,240,0.7); }
+
+// ─── NAV ───────────────────────────────────────────────
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 5%; display: flex; align-items: center; justify-content: space-between;
+  height: 80px; transition: all .5s ease;
+}
+nav.scrolled {
+  background: rgba(0, 0, 45, 0.96);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid $gold-muted; height: 64px;
+}
+.nav-logo-main { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: $gold; letter-spacing: .15em; line-height: 1; }
+.nav-logo-sub { font-size: .48rem; letter-spacing: .55em; color: rgba(195,165,105,0.5); text-transform: uppercase; font-family: 'Jost', sans-serif; }
+.nav-link {
+  font-size: .64rem; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(250,247,240,0.75); text-decoration: none; position: relative;
+  padding-bottom: 2px; transition: color .3s;
+  font-family: 'Jost', sans-serif; background: none; border: none; cursor: none;
+
+  &::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: $gold; transition: width .4s ease; }
+  &:hover { color: $gold; }
+  &:hover::after { width: 100%; }
+}
+.hamburger {
+  display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: none; padding: 4px;
+  span { width: 26px; height: 1.5px; background: $gold; display: block; transition: all .35s; }
+  &.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+  &.open span:nth-child(2) { opacity: 0; }
+  &.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+}
+
+#mobile-menu {
+  position: fixed; inset: 0; z-index: 900; background: $navy;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+  transform: translateX(100%); transition: transform .45s cubic-bezier(.22,1,.36,1);
+  &.open { transform: translateX(0); }
+}
+.mob-link {
+  font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: $cream;
+  text-decoration: none; transition: color .3s; background: none; border: none; cursor: none;
+  &:hover { color: $gold; }
+}
+
+// ─── STATS ─────────────────────────────────────────────
+.stat-num { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 4vw, 4rem); font-weight: 300; color: $gold; line-height: 1; }
+.stat-lbl { font-size: .58rem; letter-spacing: .35em; text-transform: uppercase; color: rgba(250,247,240,0.45); margin-top: 6px; font-family: 'Jost', sans-serif; }
+
+// ─── VENUE CARDS ───────────────────────────────────────
+.venue-card {
+  position: relative; overflow: hidden; cursor: none;
+  img { width: 100%; height: 100%; object-fit: cover; transition: transform .75s ease, filter .75s ease; display: block; }
+  &:hover img { transform: scale(1.09); filter: brightness(.4); }
+}
+.venue-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,45,.95) 0%, rgba(0,0,45,.2) 55%, transparent 100%); pointer-events: none; }
+.venue-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; }
+.venue-desc-text {
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height .45s ease, opacity .4s ease .05s;
+  font-size: .82rem; color: rgba(195,165,105,0.85); font-family: 'Jost', sans-serif; line-height: 1.7; margin-top: 10px;
+}
+.venue-card:hover .venue-desc-text { max-height: 100px; opacity: 1; }
+
+// ─── SERVICE CARDS ─────────────────────────────────────
+.svc-card {
+  position: relative; overflow: hidden; padding: 44px 36px;
+  border: 1px solid $gold-muted; background: $cream;
+  transition: background .4s ease, border-color .4s ease;
+
+  &::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 2px; background: $gold; transition: width .5s ease; }
+  &:hover { background: $cream-2; border-color: $gold; }
+  &:hover::before { width: 100%; }
+}
+.svc-card-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(250px circle at 50% 0%, rgba(195,165,105,.08), transparent);
+  opacity: 0; transition: opacity .4s; pointer-events: none;
+}
+.svc-card:hover .svc-card-glow { opacity: 1; }
+.svc-num { position: absolute; top: 20px; right: 24px; font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: $gold-muted; line-height: 1; }
+
+// ─── GALLERY ───────────────────────────────────────────
+.gallery-item {
+  overflow: hidden; position: relative; cursor: none;
+  img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .65s ease; }
+  &:hover img { transform: scale(1.07); }
+}
+.gallery-hover-label {
+  position: absolute; inset: 0; background: rgba(0,0,45,.55);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .35s ease;
+}
+.gallery-item:hover .gallery-hover-label { opacity: 1; }
+.gallery-label-text { font-size: .58rem; letter-spacing: .42em; text-transform: uppercase; color: $gold; border: 1px solid $gold; padding: 9px 18px; font-family: 'Jost', sans-serif; }
+
+// ─── WHY POINTS ────────────────────────────────────────
+.why-point {
+  display: flex; gap: 20px; align-items: flex-start;
+  padding: 24px 12px; border-bottom: 1px solid $gold-muted;
+  transition: background .3s ease, padding-left .3s ease;
+  &:hover { background: rgba(195,165,105,.05); padding-left: 20px; }
+}
+.why-icon-box {
+  width: 46px; height: 46px; border: 1px solid $gold-muted;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0; transition: background .3s, border-color .3s;
+}
+.why-point:hover .why-icon-box { border-color: $gold; background: rgba(195,165,105,.1); }
+
+// ─── TESTIMONIALS ──────────────────────────────────────
+.marquee-track {
+  display: flex; gap: 24px; width: max-content;
+  animation: marqueeFwd 36s linear infinite;
+  &:hover { animation-play-state: paused; }
+}
+.testi-card {
+  flex-shrink: 0; width: 360px; padding: 36px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(195,165,105,0.2);
+  position: relative;
+  &::before {
+    content: '\201C'; font-family: 'Cormorant Garamond', serif;
+    font-size: 7rem; color: rgba(195,165,105,.12);
+    position: absolute; top: 10px; left: 28px; line-height: 1; font-weight: 300;
+  }
+}
+
+// ─── CONTACT FORM ──────────────────────────────────────
+.form-input {
+  background: $cream; border: 1px solid $gold-muted; color: $ink;
+  padding: 13px 16px; font-family: 'Jost', sans-serif; font-size: .9rem;
+  outline: none; width: 100%; transition: border-color .3s;
+  &:focus { border-color: $gold; }
+  &::placeholder { color: #AAA; }
+}
+.form-label { font-size: .58rem; letter-spacing: .35em; text-transform: uppercase; color: #999; margin-bottom: 6px; display: block; font-family: 'Jost', sans-serif; }
+
+// ─── PARALLAX ──────────────────────────────────────────
+.parallax-section { position: relative; height: 420px; overflow: hidden; }
+.parallax-bg { position: absolute; inset: -60px 0; background-attachment: fixed; background-size: cover; background-position: center; filter: brightness(.12) saturate(.4); }
+.parallax-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; text-align: center; padding: 0 24px; }
+.parallax-line { width: 80px; height: 1px; background: $gold; }
+
+// ─── FOOTER ────────────────────────────────────────────
+footer { background: $navy; padding: 70px 5% 28px; }
+.footer-link {
+  color: rgba(250,247,240,0.4); font-size: .82rem; font-family: 'Jost', sans-serif;
+  text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color .3s;
+  &:hover { color: $gold; }
+}
+.social-btn {
+  width: 34px; height: 34px; border: 1px solid $gold-muted;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(195,165,105,0.4); text-decoration: none; font-size: .8rem; transition: all .3s;
+  &:hover { border-color: $gold; color: $gold; }
+}
+
+// ─── IMAGE FRAME ───────────────────────────────────────
+.img-frame {
+  position: relative;
+  &::before { content: ''; position: absolute; top: -16px; left: -16px; right: 16px; bottom: 16px; border: 1px solid $gold-muted; z-index: 0; }
+  img { position: relative; z-index: 1; }
+}
+.frame-badge {
+  position: absolute; bottom: -24px; right: -24px; z-index: 2;
+  background: $gold; width: 120px; height: 120px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  animation: rotateBadge .6s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+// ─── BEAMS & SPOTLIGHT ─────────────────────────────────
+#spotlight { position: absolute; inset: 0; pointer-events: none; z-index: 10; transition: background .1s; }
+.beam-line { stroke-dasharray: 200; animation: beamPulse 4s ease-in-out infinite; }
+.scroll-line { width: 1px; background: linear-gradient(to bottom, $gold, transparent); animation: scrollLine 2.2s ease-in-out infinite; }
+
+// ─── BLUR WORD ─────────────────────────────────────────
+.blur-word { display: inline-block; opacity: 0; filter: blur(8px); animation: blurIn .55s ease forwards; margin-right: .25em; }
+
+// ─── FORM SUCCESS ──────────────────────────────────────
+#form-success { display: none; text-align: center; padding: 60px 20px; }
+
+// ─── RESPONSIVE ────────────────────────────────────────
+@media (max-width: 900px) {
+  nav > div:nth-child(2) { display: none !important; }
+  .hamburger { display: flex !important; }
+  .nav-book-btn { display: none !important; }
+}
+@media (max-width: 520px) {
+  nav { padding: 0 4%; }
+  .hero-title { font-size: clamp(2.4rem, 10vw, 3.2rem) !important; }
+}

@@ -1,0 +1,12 @@
+@use 'variables' as *;
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: $cream; color: $ink; overflow-x: hidden; cursor: none; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: $navy-2; }
+::-webkit-scrollbar-thumb { background: $gold; border-radius: 2px; }
+
+#cursor-dot { width: 7px; height: 7px; background: $gold; border-radius: 50%; position: fixed; pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
+#cursor-ring { width: 34px; height: 34px; border: 1.5px solid $gold; border-radius: 50%; position: fixed; pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); opacity: .55; transition: opacity .3s; }
