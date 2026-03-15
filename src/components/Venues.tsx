@@ -158,17 +158,12 @@ const Venues: React.FC = () => {
         </motion.h2>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2px', maxWidth: '1400px', margin: '0 auto' }}>
+      <div className="venues-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2px', maxWidth: '1400px', margin: '0 auto' }}>
         {venues.map((venue, i) => (
           <VenueCard key={i} venue={venue} index={i} />
         ))}
       </div>
 
-      <style>{`
-        @media (max-width: 900px) {
-          #venues > div:last-child { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </section>
   )
 }

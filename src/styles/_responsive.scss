@@ -71,20 +71,28 @@
 
 // ─── VENUES ────────────────────────────────────────────
 @media (max-width: 1024px) {
-  #venues > div:last-child { grid-template-columns: repeat(2, 1fr) !important; }
-  #venues > div:last-child > div { height: 420px !important; }
+  .venues-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .venues-grid > div { height: 460px !important; }
 }
 @media (max-width: 640px) {
-  #venues > div:last-child { grid-template-columns: 1fr !important; }
-  #venues > div:last-child > div { height: 380px !important; }
+  .venues-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .venues-grid > div { height: 420px !important; }
 }
 
 // ─── SERVICES ──────────────────────────────────────────
 @media (max-width: 1024px) {
-  #services > div:last-child { grid-template-columns: repeat(2, 1fr) !important; }
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    background: none !important;
+    gap: 2px !important;
+  }
 }
 @media (max-width: 640px) {
-  #services > div:last-child { grid-template-columns: 1fr !important; }
+  .services-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2px !important;
+    background: none !important;
+  }
 }
 
 // ─── GALLERY ───────────────────────────────────────────
