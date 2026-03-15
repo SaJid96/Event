@@ -1,0 +1,160 @@
+@use 'variables' as *;
+
+// ─── BREAKPOINTS ───────────────────────────────────────
+// xl: 1280px  lg: 1024px  md: 900px  sm: 640px  xs: 480px
+
+// ─── GLOBAL SECTION PADDING ────────────────────────────
+@media (max-width: 900px) {
+  section, .section-pad {
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+  }
+}
+@media (max-width: 640px) {
+  section, .section-pad {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+  }
+}
+
+// ─── NAVBAR ────────────────────────────────────────────
+@media (max-width: 900px) {
+  nav > div:nth-child(2) { display: none !important; }
+  .hamburger { display: flex !important; }
+  .nav-book-btn { display: none !important; }
+}
+
+// ─── HERO ──────────────────────────────────────────────
+@media (max-width: 640px) {
+  #hero {
+    padding-top: 80px !important;
+    min-height: 100svh !important;
+  }
+  #hero h1 {
+    font-size: clamp(2.4rem, 11vw, 3.5rem) !important;
+    line-height: 1.1 !important;
+  }
+}
+
+// ─── STATS ─────────────────────────────────────────────
+@media (max-width: 900px) {
+  .stats-row {
+    flex-wrap: wrap !important;
+  }
+  .stats-row > div {
+    flex: 0 0 50% !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(195,165,105,0.1) !important;
+  }
+  .stats-row > div:nth-child(odd) {
+    border-right: 1px solid rgba(195,165,105,0.1) !important;
+  }
+  .stats-row > div:nth-child(3),
+  .stats-row > div:nth-child(4) {
+    border-bottom: none !important;
+  }
+}
+
+// ─── ABOUT ─────────────────────────────────────────────
+@media (max-width: 900px) {
+  #about > div { grid-template-columns: 1fr !important; gap: 48px !important; }
+  #about .img-frame img { height: 360px !important; }
+  #about .frame-badge { display: none; }
+}
+@media (max-width: 640px) {
+  #about > div > div:last-child > div[style*="1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+// ─── VENUES ────────────────────────────────────────────
+@media (max-width: 1024px) {
+  #venues > div:last-child { grid-template-columns: repeat(2, 1fr) !important; }
+  #venues > div:last-child > div { height: 420px !important; }
+}
+@media (max-width: 640px) {
+  #venues > div:last-child { grid-template-columns: 1fr !important; }
+  #venues > div:last-child > div { height: 380px !important; }
+}
+
+// ─── SERVICES ──────────────────────────────────────────
+@media (max-width: 1024px) {
+  #services > div:last-child { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 640px) {
+  #services > div:last-child { grid-template-columns: 1fr !important; }
+}
+
+// ─── GALLERY ───────────────────────────────────────────
+@media (max-width: 900px) {
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 220px 220px 220px !important;
+  }
+  .gallery-grid > div:first-child {
+    grid-row: span 1 !important;
+    grid-column: span 2 !important;
+  }
+}
+@media (max-width: 480px) {
+  .gallery-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: repeat(5, 220px) !important;
+  }
+  .gallery-grid > div:first-child {
+    grid-column: span 1 !important;
+  }
+}
+
+// ─── WHY US ────────────────────────────────────────────
+@media (max-width: 900px) {
+  #why > div { grid-template-columns: 1fr !important; gap: 48px !important; }
+  #why img { height: 320px !important; }
+  #why .year-badge { display: none !important; }
+}
+
+// ─── PARALLAX DIVIDER ──────────────────────────────────
+@media (max-width: 640px) {
+  .parallax-section { height: 340px !important; }
+  .parallax-content { padding: 0 5% !important; }
+}
+
+// ─── TESTIMONIALS ──────────────────────────────────────
+@media (max-width: 640px) {
+  .testi-card { width: 280px !important; padding: 24px !important; }
+}
+
+// ─── CONTACT ───────────────────────────────────────────
+@media (max-width: 900px) {
+  #contact > div:nth-child(2) { grid-template-columns: 1fr !important; gap: 48px !important; }
+}
+@media (max-width: 640px) {
+  .contact-form-row { grid-template-columns: 1fr !important; }
+  #contact > div:nth-child(3) { margin-top: 40px !important; }
+  .map-address-card { max-width: none !important; left: 16px !important; right: 16px !important; bottom: 16px !important; }
+  .map-directions-btn { right: 16px !important; bottom: 80px !important; }
+}
+
+// ─── FOOTER ────────────────────────────────────────────
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 40px !important; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+  footer { padding: 56px 5% 24px !important; }
+}
+
+// ─── BOOKING PAGE ──────────────────────────────────────
+@media (max-width: 640px) {
+  .booking-row { grid-template-columns: 1fr !important; }
+  .booking-page { padding: 40px 20px 60px !important; }
+}
+
+// ─── SEC TITLES ────────────────────────────────────────
+@media (max-width: 640px) {
+  .sec-title, .sec-title-light {
+    font-size: clamp(1.9rem, 8vw, 2.8rem) !important;
+  }
+}

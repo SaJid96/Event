@@ -126,7 +126,7 @@ const Stats: React.FC = () => {
     <div style={{ background: '#071033', borderTop: '1px solid rgba(195,165,105,0.1)', borderBottom: '1px solid rgba(195,165,105,0.1)', padding: '0 5%', position: 'relative', overflow: 'hidden' }}>
       {/* Ambient line */}
       <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '1px', height: '100%', background: 'linear-gradient(to bottom, transparent, rgba(195,165,105,0.08), transparent)', pointerEvents: 'none' }} />
-      <div style={{ display: 'flex', alignItems: 'stretch', maxWidth: '1200px', margin: '0 auto' }}>
+      <div className="stats-row" style={{ display: 'flex', alignItems: 'stretch', maxWidth: '1200px', margin: '0 auto' }}>
         {stats.map((stat, i) => (
           <StatItem key={i} {...stat} index={i} isLast={i === stats.length - 1} icon={statIcons[i]} />
         ))}

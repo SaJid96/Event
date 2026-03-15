@@ -68,7 +68,7 @@ const BookingPage = () => {
         }}
       />
 
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: '820px', margin: '0 auto', padding: '60px 24px 80px' }}>
+      <div className="booking-page" style={{ position: 'relative', zIndex: 1, maxWidth: '820px', margin: '0 auto', padding: '60px 24px 80px' }}>
 
         {/* Back button */}
         <motion.button
@@ -183,7 +183,7 @@ const BookingPage = () => {
               style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}
             >
               {/* Row 1: Name + Email */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+              <div className="booking-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
                 <div>
                   <label className="form-label" htmlFor="name">Full Name *</label>
                   <input id="name" name="name" type="text" className="form-input booking-input" placeholder="Your full name" value={form.name} onChange={handleChange} required />
@@ -195,7 +195,7 @@ const BookingPage = () => {
               </div>
 
               {/* Row 2: Phone + Event Type */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+              <div className="booking-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
                 <div>
                   <label className="form-label" htmlFor="phone">Phone Number *</label>
                   <input id="phone" name="phone" type="tel" className="form-input booking-input" placeholder="+91 00000 00000" value={form.phone} onChange={handleChange} required />
@@ -216,7 +216,7 @@ const BookingPage = () => {
               </div>
 
               {/* Row 3: Date + Guest Count */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+              <div className="booking-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
                 <div>
                   <label className="form-label" htmlFor="eventDate">Preferred Event Date *</label>
                   <input id="eventDate" name="eventDate" type="date" className="form-input booking-input" value={form.eventDate} onChange={handleChange} required />
@@ -235,7 +235,7 @@ const BookingPage = () => {
               </div>
 
               {/* Row 4: Venue + Budget */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+              <div className="booking-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
                 <div>
                   <label className="form-label" htmlFor="venuePreference">Venue Preference</label>
                   <select id="venuePreference" name="venuePreference" className="form-input booking-input" value={form.venuePreference} onChange={handleChange}>

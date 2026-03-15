@@ -35,6 +35,7 @@ const Gallery: React.FC = () => {
 
       {/* Grid: left column spans 2 rows, right has 2x2 */}
       <div
+        className="gallery-grid"
         style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr 1fr',

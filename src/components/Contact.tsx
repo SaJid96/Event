@@ -224,7 +224,7 @@ const Contact: React.FC = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <div className="contact-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 <div>
                   <label className="form-label" htmlFor="c-name">Name</label>
                   <input id="c-name" name="name" type="text" className="form-input" placeholder="Your full name" value={form.name} onChange={handleChange} required />
@@ -234,7 +234,7 @@ const Contact: React.FC = () => {
                   <input id="c-email" name="email" type="email" className="form-input" placeholder="your@email.com" value={form.email} onChange={handleChange} required />
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <div className="contact-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 <div>
                   <label className="form-label" htmlFor="c-eventType">Event Type</label>
                   <select id="c-eventType" name="eventType" className="form-input" value={form.eventType} onChange={handleChange} required>
@@ -303,6 +303,7 @@ const Contact: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.5 }}
+            className="map-address-card"
             style={{
               position: 'absolute', bottom: '28px', left: '32px',
               background: 'rgba(250,247,240,0.95)', backdropFilter: 'blur(12px)',
@@ -326,6 +327,7 @@ const Contact: React.FC = () => {
           {/* Get Directions button — bottom right */}
           <button
             onClick={openMaps}
+            className="map-directions-btn"
             style={{
               position: 'absolute', bottom: '28px', right: '32px', zIndex: 3,
               background: '#C3A569', border: 'none', cursor: 'pointer',

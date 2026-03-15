@@ -22,6 +22,7 @@ const Footer: React.FC<FooterProps> = ({ scrollTo, openBooking }) => {
   return (
     <footer>
       <div
+        className="footer-grid"
         style={{
           display: 'grid',
           gridTemplateColumns: '2fr 1fr 1fr 1.5fr',

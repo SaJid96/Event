@@ -92,6 +92,7 @@ const WhyUs: React.FC = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.5 }}
+              className="year-badge"
               style={{
                 position: 'absolute', bottom: '32px', right: '-24px',
                 background: '#00002D', padding: '20px 28px',
