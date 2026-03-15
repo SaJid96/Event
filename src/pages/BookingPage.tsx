@@ -16,17 +16,24 @@ const BookingPage = () => {
     email: '',
     phone: '',
     eventType: '',
+    otherEventType: '',
     eventDate: '',
     guestCount: '',
     venuePreference: '',
     budgetRange: '',
+    foodPreference: '',
     message: '',
   })
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setForm(prev => ({
+      ...prev,
+      [name]: value,
+      ...(name === 'eventType' && value !== 'Other' ? { otherEventType: '' } : {}),
+    }))
   }
 
   const handleSubmit = async (e: FormEvent) => {
@@ -37,11 +44,12 @@ const BookingPage = () => {
       from_name: form.name,
       from_email: form.email,
       phone: form.phone,
-      event_type: form.eventType,
+      event_type: form.eventType === 'Other' ? `Other – ${form.otherEventType}` : form.eventType,
       event_date: form.eventDate,
       guest_count: form.guestCount,
       venue_preference: form.venuePreference || 'No preference',
       budget_range: form.budgetRange || 'Not specified',
+      food_preference: form.foodPreference || 'Not specified',
       message: form.message || 'No additional message',
       reply_to: form.email,
     }
@@ -215,6 +223,32 @@ const BookingPage = () => {
                 </div>
               </div>
 
+              {/* Other event type input */}
+              <AnimatePresence>
+                {form.eventType === 'Other' && (
+                  <motion.div
+                    key="otherEventType"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ overflow: 'hidden' }}
+                  >
+                    <label className="form-label" htmlFor="otherEventType">Event Name *</label>
+                    <input
+                      id="otherEventType"
+                      name="otherEventType"
+                      type="text"
+                      className="form-input booking-input"
+                      placeholder="Describe your event…"
+                      value={form.otherEventType}
+                      onChange={handleChange}
+                      required
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {/* Row 3: Date + Guest Count */}
               <div className="booking-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
                 <div>
@@ -255,6 +289,18 @@ const BookingPage = () => {
                     <option>₹10 – ₹20 Lakhs</option>
                     <option>₹20 – ₹50 Lakhs</option>
                     <option>Above ₹50 Lakhs</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 5: Food Preference */}
+              <div className="booking-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+                <div>
+                  <label className="form-label" htmlFor="foodPreference">Food Preference</label>
+                  <select id="foodPreference" name="foodPreference" className="form-input booking-input" value={form.foodPreference} onChange={handleChange}>
+                    <option value="">Select preference</option>
+                    <option>Veg</option>
+                    <option>Non-Veg</option>
                   </select>
                 </div>
               </div>
